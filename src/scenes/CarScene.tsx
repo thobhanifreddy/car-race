@@ -1,6 +1,10 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
+const roadWidth = 5; // The width of the road
+const boundaryLeft = -roadWidth / 2; // The left boundary of the road
+const boundaryRight = roadWidth / 2; // The right boundary of the road
+
 const CarScene: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
   const carRef = useRef<THREE.Mesh>(new THREE.Mesh());
@@ -28,7 +32,7 @@ const CarScene: React.FC = () => {
     );
 
     // Adjust the camera position
-    camera.position.z = 4; // Closer to the car
+    camera.position.z = 5; // Closer to the car
     camera.position.y = 2; // Higher than the car
 
     // Renderer
@@ -37,7 +41,7 @@ const CarScene: React.FC = () => {
     mountRef.current?.appendChild(renderer.domElement);
 
     // Road Geometry
-    const roadGeometry = new THREE.PlaneGeometry(10, 100); // Width and length of the road
+    const roadGeometry = new THREE.PlaneGeometry(roadWidth, 100); // Width and length of the road
     const roadMaterial = new THREE.MeshBasicMaterial({ color: 0x808080 }); // Grey color for the road
     const road = new THREE.Mesh(roadGeometry, roadMaterial);
     road.rotation.x = -Math.PI / 2; // Rotate the plane to be flat on the X-axis
@@ -53,8 +57,7 @@ const CarScene: React.FC = () => {
     const car = new THREE.Mesh(geometry, material);
     scene.add(car);
     carRef.current = car; // Reference the car
-
-    camera.lookAt(car.position);
+    carRef.current.position.set(0, 0, 0);
 
     // Handling key events
     const onKeyDown = (event: KeyboardEvent) => {
@@ -103,6 +106,15 @@ const CarScene: React.FC = () => {
       if (moveRef.current.backward) carRef.current.position.z += 0.01;
       if (moveRef.current.left) carRef.current.position.x -= 0.01;
       if (moveRef.current.right) carRef.current.position.x += 0.01;
+
+      // Check if the car is off the road
+      if (
+        carRef.current.position.x < boundaryLeft ||
+        carRef.current.position.x > boundaryRight
+      ) {
+        // Car is off the road, reset position
+        carRef.current.position.set(0, 0, 0); // Reset the car to the start of the road
+      }
 
       renderer.render(scene, camera);
     };
