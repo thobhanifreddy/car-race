@@ -1,12 +1,16 @@
 import { useCallback, useEffect, useRef } from "react";
-import { AmbientLight, AxesHelper, DirectionalLight, Scene } from "three";
+import { AxesHelper, DirectionalLight, Scene } from "three";
 import { getCamera } from "../camera";
 import { getRoad } from "../elements/road";
 import { useController } from "../useController";
 import { useRenderer } from "../useRenderer";
 import { useCar } from "../elements/useCar";
+import { getSky } from "../elements/sky";
+import { getGround } from "../elements/ground";
+import { getSun, getSunLight } from "../elements/sun";
+import { addCloudsToSky } from "../elements/clouds";
 
-const roadWidth = 10; // The width of the road
+const roadWidth = 30; // The width of the road
 const boundaryLeft = -roadWidth / 2; // The left boundary of the road
 const boundaryRight = roadWidth / 2; // The right boundary of the road
 
@@ -16,10 +20,16 @@ const CarScene: React.FC = () => {
   const camera = getCamera({ x: 0, y: 5, z: 9 });
   const controller = useController();
 
-  const road = getRoad(roadWidth, 100);
+  const road = getRoad(roadWidth);
+  const sky = getSky();
+  const sun = getSun();
+  const sunLight = getSunLight();
+  const clouds = addCloudsToSky(100);
+
+  const ground = getGround();
   const car = useCar(
     { width: 2, height: 0.5, depth: 1, color: 0x00ff00 },
-    { x: 0, y: 0, z: 0 }
+    { x: 0, y: 0.5, z: 0 }
   );
 
   const renderer = useRenderer(camera);
@@ -60,7 +70,14 @@ const CarScene: React.FC = () => {
 
     scene.add(car);
 
+    scene.add(sky);
+    scene.add(sun);
+    scene.add(sunLight);
+    scene.add(clouds);
+
+    scene.add(ground);
     scene.add(road);
+
     mountRef.current?.appendChild(renderer.domElement);
 
     animate(scene);
