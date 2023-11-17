@@ -1,24 +1,24 @@
 import { useCallback, useEffect, useRef } from "react";
-import { AxesHelper, Scene, Vector3 } from "three";
+import { AmbientLight, AxesHelper, DirectionalLight, Scene } from "three";
 import { getCamera } from "../camera";
 import { getRoad } from "../elements/road";
 import { useController } from "../useController";
 import { useRenderer } from "../useRenderer";
 import { useCar } from "../elements/useCar";
 
-const roadWidth = 5; // The width of the road
+const roadWidth = 10; // The width of the road
 const boundaryLeft = -roadWidth / 2; // The left boundary of the road
 const boundaryRight = roadWidth / 2; // The right boundary of the road
 
 const CarScene: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
 
-  const camera = getCamera(new Vector3(0, 5, 2));
+  const camera = getCamera({ x: 0, y: 5, z: 9 });
   const controller = useController();
 
   const road = getRoad(roadWidth, 100);
   const car = useCar(
-    { width: 1, height: 0.5, depth: 3, color: 0x00ff00 },
+    { width: 2, height: 0.5, depth: 1, color: 0x00ff00 },
     { x: 0, y: 0, z: 0 }
   );
 
@@ -53,6 +53,10 @@ const CarScene: React.FC = () => {
 
     const axesHelper = new AxesHelper(10);
     scene.add(axesHelper);
+
+    const light = new DirectionalLight(0xffffff, 1); // color, intensity
+    light.position.set(1, 1, 1); // position the light
+    scene.add(light);
 
     scene.add(car);
 

@@ -1,6 +1,10 @@
-import { PerspectiveCamera, Vector3 } from "three";
+import { PerspectiveCamera } from "three";
 
-export const getCamera = (initialPostion: Vector3) => {
+export const getCamera = (initialPostion: {
+  x: number;
+  y: number;
+  z: number;
+}) => {
   // Camera
   const camera = new PerspectiveCamera(
     75,
