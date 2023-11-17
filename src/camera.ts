@@ -5,7 +5,7 @@ export const getCamera = (initialPostion: Vector3) => {
   const camera = new PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
-    0.1,
+    1,
     100
   );
 

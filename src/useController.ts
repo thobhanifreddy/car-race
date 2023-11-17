@@ -52,5 +52,5 @@ export const useController = () => {
     }
   };
 
-  return controller;
+  return controller.current;
 };
