@@ -41,15 +41,15 @@ const CarScene: React.FC = () => {
       requestAnimationFrame(() => animate(scene));
 
       // Update car position based on state
-      if (controller.forward) car.position.z -= 0.01;
-      if (controller.backward) car.position.z += 0.01;
-      if (controller.left) car.position.x -= 0.01;
-      if (controller.right) car.position.x += 0.01;
+      if (controller.forward) car.position.z -= 0.1;
+      if (controller.backward) car.position.z += 0.1;
+      if (controller.left) car.position.x -= 0.1;
+      if (controller.right) car.position.x += 0.1;
 
       // Check if the car is off the road
       if (car.position.x < boundaryLeft || car.position.x > boundaryRight) {
         // Car is off the road, reset position
-        car.position.set(0, 0, 0); // Reset the car to the start of the road
+        car.position.set(0, 0.5, 0); // Reset the car to the start of the road
       }
 
       renderer.render(scene, camera);
